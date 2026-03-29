@@ -1,0 +1,126 @@
+.chat-container {
+  max-width: 680px;
+  margin: 2rem auto;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+
+h1 {
+  margin-bottom: 0.75rem;
+}
+
+.messages-window {
+  min-height: 320px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 14px;
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.user,
+.bot {
+  display: flex;
+  margin: 0.4rem 0;
+}
+
+.user .bubble,
+.bot .bubble {
+  max-width: 85%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+}
+
+.user .bubble {
+  background: #cce7ff;
+  margin-left: auto;
+  text-align: right;
+}
+
+.bot .bubble {
+  background: #f0f0f5;
+  margin-right: auto;
+}
+
+.meta {
+  font-size: 0.7rem;
+  color: #666;
+  display: block;
+  margin-top: 0.3rem;
+}
+
+.toolbar {
+  display: flex;
+  margin-top: 1rem;
+}
+
+.toolbar input {
+  flex: 1;
+  padding: 0.67rem 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #b9b9c7;
+  margin-right: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.toolbar button {
+  min-width: 110px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.56rem;
+  background: #0069ff;
+  color: white;
+  cursor: pointer;
+}
+
+.response-panel {
+  margin-top: 1rem;
+  border: 1px solid #d8dde6;
+  border-radius: 10px;
+  padding: 0.85rem;
+  background: #f6f8fb;
+}
+
+.response-panel label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+  color: #2f3f58;
+}
+
+.response-panel textarea {
+  width: 100%;
+  padding: 0.6rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  border: 1px solid #bbc4d3;
+  border-radius: 0.5rem;
+  background: #fff;
+  resize: vertical;
+}
+
+.response-panel .copy-btn {
+  margin-top: 0.6rem;
+  padding: 0.52rem 0.8rem;
+  border-radius: 0.55rem;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.status-bar {
+  margin-top: 0.8rem;
+  font-size: 0.84rem;
+  display: flex;
+  justify-content: space-between;
+  color: #333;
+}
+
+.status-bar .error {
+  color: #d11;
+}
