@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, ChatMessage } from './chat.service';
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
 
-  constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.initSession();
@@ -28,6 +28,10 @@ export class AppComponent implements OnInit {
 
   private initSession() {
     this.sessionId = `sess-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  }
+
+  private isValidChatResponse(resp: any): resp is { answer?: string; response?: string; sessionId?: string } {
+    return resp && typeof resp === 'object' && (typeof resp.answer === 'string' || typeof resp.response === 'string');
   }
 
   copyResponse() {
@@ -65,8 +69,24 @@ export class AppComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (resp) => {
-          const botText = resp.answer?.trim() || 'No response from server';
+          console.log('sendMessage response:', resp);
+
+          if (!this.isValidChatResponse(resp)) {
+            console.error('Invalid chat response from server:', resp);
+            this.errorMessage = 'Invalid response from server. Please try again.';
+            this.messages.push({
+              id: this.messages.length + 1,
+              role: 'bot',
+              text: this.errorMessage,
+              createdAt: new Date().toISOString()
+            });
+            return;
+          }
+
+          const botText = ((resp.answer ?? resp.response) || 'No response from server').trim();
+          console.log("botText:", botText);
           this.lastResponse = botText;
+          this.cdr.detectChanges();
           this.messages.push({
             id: this.messages.length + 1,
             role: 'bot',

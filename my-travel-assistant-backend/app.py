@@ -1,20 +1,29 @@
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from chatbot import ChatBot
 
 app = Flask(__name__)
+
+# Allow only your Angular application
+CORS(app, origins=["http://localhost:4200"]) 
+
 
 
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
 
-@app.route('/chat', methods=['GET'])
+@app.route('/chat', methods=['POST'])
 def chat():
-    #data = request.get_json(silent=True) or {}
-    #user_message = data.get("message", "")
+    print("Received a request at /chat endpoint.")
+    data = request.get_json(silent=True) or {}
+    #print(f"Request data: {data}")
+    user_message = data.get("query", "")
 
-    user_message = "I want 3 day itinerary for Mysuru, budget friendly hotels and advice on the best time to visit and available mode of transportation." 
+    #print(f"session id: {request.headers.get('sessionid', 'No session ID provided')}")
+
+    #user_message = "I want 3 day itinerary for Mysuru, budget friendly hotels and advice on the best time to visit and available mode of transportation." 
     # For testing purpose, you can replace this with dynamic input from the request body as shown above.
 
     print(f"User: {user_message}")
@@ -22,11 +31,26 @@ def chat():
     if not user_message:
         return jsonify({"error": "validation_error", "message": "'message' is required."}), 400
 
-    response_message = chatbot.chat(user_message)
+    try:
+        # Default response object when chatbot.chat is not available
+        response_message = {
+            "answer": "Server cannot process your request at the moment.",
+            "response": "Server cannot process your request at the moment."
+        }
+        response_message = chatbot.chat(user_message)
+        
+    
+        print(f"ChatBot: {response_message}")   
 
-    #print(f"ChatBot: {response}")   
+    except Exception as e:
+        print(f"Error: {e}")
+        response_message = {
+            "answer": "Server cannot process your request at the moment.",
+            "response": "Server cannot process your request at the moment."
+        }
 
-    return jsonify({"message": response_message})    
+    print(f"Final Response: {response_message}")
+    return jsonify(response_message)    
 
 
 if __name__ == "__main__":

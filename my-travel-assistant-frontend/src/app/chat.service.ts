@@ -10,14 +10,15 @@ export interface ChatMessage {
 }
 
 export interface ChatResponse {
-  answer: string;
+  answer?: string;
+  response?: string;
   status?: string;
   sessionId?: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
-  private readonly baseUrl = 'https://your-backend.example.com/api/chat';
+  private readonly baseUrl = 'http://localhost:8080/chat';
 
   constructor(private http: HttpClient) {}
 

@@ -25,8 +25,8 @@
   </div>
 
   <div class="response-panel">
-    <label>Latest API Response:</label>
-    <textarea readonly rows="4" [value]="lastResponse" placeholder="No response yet"></textarea>
+    <label for="latest-response">Latest API Response:</label>
+    <textarea id="latest-response" readonly rows="4" placeholder="No response yet">{{ lastResponse }}</textarea>
     <button class="copy-btn" (click)="copyResponse()" [disabled]="!lastResponse">Copy Response</button>
   </div>
 

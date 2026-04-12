@@ -4,6 +4,7 @@ load_dotenv()
 from langchain.chat_models import init_chat_model
 from langchain.agents import create_agent
 from langchain.messages import HumanMessage
+from langchain_aws import ChatBedrock
 
 class ChatBot:
     def __init__(self, name):
@@ -14,12 +15,18 @@ class ChatBot:
         "Scope & Restrictions: Only answer questions related to destinations, logistics, "
         "planning, and local knowledge. If the question is unrelated, answer exactly with: "
         "'Sorry, I can only answer questions related to travel planning, destinations, and trip logistics.'"
+        
         self.model =init_chat_model(
-                    model="gpt-5-nano",
-                    # Kwargs passed to the model:
-                    temperature=1.0
+                     model="amazon.nova-lite-v1:0",
+                     model_provider="bedrock_converse",
+                     region_name="ap-south-1",
+                     max_tokens=1024,
+                     temperature=1.0
             )
+        #aws_llm = ChatBedrock(model="amazon.nova-micro-v1:0", region="ap-south-1")
+
         self.agent = create_agent(model=self.model, system_prompt=system_prompt)
+        #self.agent = create_agent(aws_llm, system_prompt=system_prompt)
 
     #Test Function
     def greet(self):
@@ -36,7 +43,7 @@ class ChatBot:
         
     def chat(self, user_input):
         # This method can be expanded to integrate with a language model for more dynamic responses.
-        
+        print(f"User input to chat method: {user_input}")
         response = self.agent.invoke({"messages": [HumanMessage(content=user_input)]})
 
         print(response.messages[-1].content)
