@@ -18,12 +18,12 @@ def hello_world():
 def chat():
     print("Received a request at /chat endpoint.")
     data = request.get_json(silent=True) or {}
-    #print(f"Request data: {data}")
+    
     user_message = data.get("query", "")
-
-    #print(f"session id: {request.headers.get('sessionid', 'No session ID provided')}")
-
+    user_id = data.get("userId", "")
+    print("user_id:", user_id)
     #user_message = "I want 3 day itinerary for Mysuru, budget friendly hotels and advice on the best time to visit and available mode of transportation." 
+    
     # For testing purpose, you can replace this with dynamic input from the request body as shown above.
 
     print(f"User: {user_message}")
@@ -37,10 +37,10 @@ def chat():
             "answer": "Server cannot process your request at the moment.",
             "response": "Server cannot process your request at the moment."
         }
-        response_message = chatbot.chat(user_message)
+        response_message = chatbot.chat(user_message, user_id)
         
     
-        print(f"ChatBot: {response_message}")   
+        #print(f"ChatBot: {response_message}")   
 
     except Exception as e:
         print(f"Error: {e}")

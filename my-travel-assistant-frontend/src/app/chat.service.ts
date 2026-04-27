@@ -22,7 +22,7 @@ export class ChatService {
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(sessionId: string | null, query: string): Observable<ChatResponse> {
-    return this.http.post<ChatResponse>(this.baseUrl, { sessionId, query });
+  sendMessage(sessionId: string | null, query: string, userId: string): Observable<ChatResponse> {
+    return this.http.post<ChatResponse>(this.baseUrl, { sessionId, query, userId });
   }
 }

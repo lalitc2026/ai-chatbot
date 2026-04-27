@@ -5,10 +5,14 @@ from langchain.chat_models import init_chat_model
 from langchain.agents import create_agent
 from langchain.messages import HumanMessage
 from langchain_aws import ChatBedrock
+from langgraph.checkpoint.memory import MemorySaver
 
 class ChatBot:
     def __init__(self, name):
         self.name = name
+
+        checkpoint = MemorySaver()
+
         system_prompt = "You are a professional and knowledgeable Travel Assistance AI agent. "
         "Your goal is to help users plan trips, discover destinations, and manage travel logistics. "
         "Response Formatting: Use proper HTML tags like <h3>, <ul>, <li>, <strong>, and <p>. "
@@ -21,7 +25,8 @@ class ChatBot:
                      model_provider="bedrock_converse",
                      region_name="ap-south-1",
                      max_tokens=1024,
-                     temperature=1.0
+                     temperature=1.0,
+                     checkpoint=checkpoint
             )
         #aws_llm = ChatBedrock(model="amazon.nova-micro-v1:0", region="ap-south-1")
 
@@ -31,6 +36,7 @@ class ChatBot:
     #Test Function
     def greet(self):
         return f"Hello! I am {self.name}, your friendly chatbot. How can I assist you today?"
+    
     #Test Function
     def respond(self, user_input):
         # This is a simple response mechanism. You can expand this with more complex logic.
@@ -41,10 +47,14 @@ class ChatBot:
         else:
             return "I'm not sure how to respond to that. Can you please rephrase?"
         
-    def chat(self, user_input):
+    def chat(self, user_input: str, user_id: str):
         # This method can be expanded to integrate with a language model for more dynamic responses.
         print(f"User input to chat method: {user_input}")
-        response = self.agent.invoke({"messages": [HumanMessage(content=user_input)]})
+        print(f"User ID: {user_id}")
+
+        config = {"configurable": {"thread_id": user_id}}
+
+        response = self.agent.invoke({"messages": [HumanMessage(content=user_input)]}, config=config)
 
         print(response.messages[-1].content)
         

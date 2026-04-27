@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   title = 'Travel Chat';
   query = '';
   sessionId: string | null = null;
+  userId: string;
   messages: ChatMessage[] = [];
   lastResponse = '';
   isLoading = false;
@@ -23,7 +24,18 @@ export class AppComponent implements OnInit {
   constructor(private chatService: ChatService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.initUserId();
     this.initSession();
+  }
+
+  private initUserId() {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      this.userId = storedUserId;
+    } else {
+      this.userId = `user-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+      localStorage.setItem('userId', this.userId);
+    }
   }
 
   private initSession() {
@@ -65,7 +77,7 @@ export class AppComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.chatService.sendMessage(this.sessionId, trimmed)
+    this.chatService.sendMessage(this.sessionId, trimmed, this.userId)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (resp) => {
