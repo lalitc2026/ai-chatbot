@@ -16,17 +16,16 @@ def hello_world():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    print("Received a request at /chat endpoint.")
+
     data = request.get_json(silent=True) or {}
     
     user_message = data.get("query", "")
     user_id = data.get("userId", "")
-    print("user_id:", user_id)
-    #user_message = "I want 3 day itinerary for Mysuru, budget friendly hotels and advice on the best time to visit and available mode of transportation." 
     
-    # For testing purpose, you can replace this with dynamic input from the request body as shown above.
-
+    print("user_id:", user_id)
     print(f"User: {user_message}")
+    
+    # For testing purpose, you can replace this with dynamic input from the request body as shown above.  
 
     if not user_message:
         return jsonify({"error": "validation_error", "message": "'message' is required."}), 400
@@ -37,10 +36,7 @@ def chat():
             "answer": "Server cannot process your request at the moment.",
             "response": "Server cannot process your request at the moment."
         }
-        response_message = chatbot.chat(user_message, user_id)
-        
-    
-        #print(f"ChatBot: {response_message}")   
+        response_message = chatbot.chat(user_message, user_id)  
 
     except Exception as e:
         print(f"Error: {e}")

@@ -11,7 +11,7 @@ class ChatBot:
     def __init__(self, name):
         self.name = name
 
-        checkpoint = MemorySaver()
+        checkpointer = MemorySaver()
 
         system_prompt = "You are a professional and knowledgeable Travel Assistance AI agent. "
         "Your goal is to help users plan trips, discover destinations, and manage travel logistics. "
@@ -20,18 +20,18 @@ class ChatBot:
         "planning, and local knowledge. If the question is unrelated, answer exactly with: "
         "'Sorry, I can only answer questions related to travel planning, destinations, and trip logistics.'"
         
-        self.model =init_chat_model(
-                     model="amazon.nova-lite-v1:0",
-                     model_provider="bedrock_converse",
-                     region_name="ap-south-1",
-                     max_tokens=1024,
-                     temperature=1.0,
-                     checkpoint=checkpoint
-            )
-        #aws_llm = ChatBedrock(model="amazon.nova-micro-v1:0", region="ap-south-1")
+        # self.model =init_chat_model(
+        #              model="amazon.nova-lite-v1:0",
+        #              model_provider="bedrock_converse",
+        #              region_name="ap-south-1",
+        #              max_tokens=1024,
+        #              temperature=1.0,
+        #              checkpointer=checkpointer
+        #     )
+        aws_llm = ChatBedrock(model="apac.amazon.nova-micro-v1:0", region="ap-south-1")
 
-        self.agent = create_agent(model=self.model, system_prompt=system_prompt)
-        #self.agent = create_agent(aws_llm, system_prompt=system_prompt)
+        #self.agent = create_agent(model=self.model, system_prompt=system_prompt)
+        self.agent = create_agent(aws_llm, system_prompt=system_prompt, checkpointer=checkpointer)
 
     #Test Function
     def greet(self):
@@ -52,10 +52,15 @@ class ChatBot:
         print(f"User input to chat method: {user_input}")
         print(f"User ID: {user_id}")
 
+    
         config = {"configurable": {"thread_id": user_id}}
+        response = self.agent.invoke({
+            "messages": [HumanMessage(content=user_input)]
+        },
+        config=config)
 
-        response = self.agent.invoke({"messages": [HumanMessage(content=user_input)]}, config=config)
+        # print("Agent Response:", response)
 
-        print(response.messages[-1].content)
+        print(response["messages"][-1].content)
         
-        return response.messages[-1].content
+        return response["messages"][-1].content
