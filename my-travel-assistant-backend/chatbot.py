@@ -18,8 +18,8 @@ class ChatBot:
         I will be printing the answer in HTML page so include proper formatting in the response as well without
         any additional metadata and HTML title block as I will be printing whole response in HTML. 
         I have setup a chatbot in my HTML
-        Scope & Restrictions: Only answer questions related to destinations, logistics,
-        planning, and local knowledge. If the question is unrelated, answer exactly with:
+        Scope & Restrictions: Only answer questions related to travel destinations, travel logistics,
+        travel planning, and local knowledge of travel destination. If the question is unrelated, answer exactly with:
         'Sorry, I can only answer questions related to travel planning, destinations, and trip logistics.'"""
         
         # self.model =init_chat_model(
