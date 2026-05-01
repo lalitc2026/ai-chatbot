@@ -12,12 +12,11 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'Travel Chat';
+  title = 'Travel Assistant';
   query = '';
   sessionId: string | null = null;
   userId: string;
   messages: ChatMessage[] = [];
-  lastResponse = '';
   isLoading = false;
   errorMessage = '';
 
@@ -42,23 +41,8 @@ export class AppComponent implements OnInit {
     this.sessionId = `sess-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   }
 
-  private isValidChatResponse(resp: any): resp is { answer?: string; response?: string; sessionId?: string } {
-    return resp && typeof resp === 'object' && (typeof resp.answer === 'string' || typeof resp.response === 'string');
-  }
-
-  copyResponse() {
-    if (!this.lastResponse) {
-      return;
-    }
-
-    navigator.clipboard.writeText(this.lastResponse)
-      .then(() => {
-        this.errorMessage = 'Response copied to clipboard.';
-        setTimeout(() => (this.errorMessage = ''), 1800);
-      })
-      .catch(() => {
-        this.errorMessage = 'Could not copy response. Please copy manually.';
-      });
+  private isValidChatResponse(resp: any): resp is { answer?: string; response?: string; sessionId?: string } | string {
+    return resp && (typeof resp === 'string' || (typeof resp === 'object' && (typeof resp.answer === 'string' || typeof resp.response === 'string')));
   }
 
   submitQuery() {
@@ -92,19 +76,19 @@ export class AppComponent implements OnInit {
               text: this.errorMessage,
               createdAt: new Date().toISOString()
             });
+            this.cdr.detectChanges();
             return;
           }
 
-          const botText = ((resp.answer ?? resp.response) || 'No response from server').trim();
+          const botText = (typeof resp === 'string' ? resp : ((resp.answer ?? resp.response) || 'No response from server')).trim();
           console.log("botText:", botText);
-          this.lastResponse = botText;
-          this.cdr.detectChanges();
           this.messages.push({
             id: this.messages.length + 1,
             role: 'bot',
             text: botText,
             createdAt: new Date().toISOString()
           });
+          this.cdr.detectChanges();
 
           if (resp.sessionId) {
             this.sessionId = resp.sessionId;
@@ -118,6 +102,7 @@ export class AppComponent implements OnInit {
             text: this.errorMessage,
             createdAt: new Date().toISOString()
           });
+          this.cdr.detectChanges();
         }
       });
 

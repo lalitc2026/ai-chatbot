@@ -20,14 +20,8 @@
       [disabled]="isLoading"
     />
     <button (click)="submitQuery()" [disabled]="!query.trim() || isLoading">
-      {{ isLoading ? 'Sending...' : 'Send' }}
+      Submit
     </button>
-  </div>
-
-  <div class="response-panel">
-    <label for="latest-response">Latest API Response:</label>
-    <textarea id="latest-response" readonly rows="4" placeholder="No response yet">{{ lastResponse }}</textarea>
-    <button class="copy-btn" (click)="copyResponse()" [disabled]="!lastResponse">Copy Response</button>
   </div>
 
   <div class="status-bar">
