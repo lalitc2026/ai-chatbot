@@ -22,8 +22,8 @@ def chat():
     user_message = data.get("query", "")
     user_id = data.get("userId", "")
     
-    print("user_id:", user_id)
-    print(f"User: {user_message}")
+    #print("user_id:", user_id)
+    #print(f"User: {user_message}")
     
     # For testing purpose, you can replace this with dynamic input from the request body as shown above.  
 
@@ -45,7 +45,7 @@ def chat():
             "response": "Server cannot process your request at the moment."
         }
 
-    print(f"Final Response: {response_message}")
+    #print(f"Final Response: {response_message}")
     return jsonify(response_message)    
 
 
