@@ -5,7 +5,8 @@
     <div *ngFor="let msg of messages" [ngClass]="msg.role">
       <div class="bubble">
         <strong>{{ msg.role === 'user' ? 'You' : 'Assistant' }}</strong>
-        <p>{{ msg.text }}</p>
+        <p *ngIf="msg.role === 'user'">{{ msg.text }}</p>
+        <div *ngIf="msg.role !== 'user'" [innerHTML]="msg.text"></div>
         <span class="meta">{{ msg.createdAt | date:'shortTime' }}</span>
       </div>
     </div>
@@ -17,7 +18,6 @@
       placeholder="Type your question..."
       [(ngModel)]="query"
       (keyup.enter)="submitQuery()"
-      [disabled]="isLoading"
     />
     <button (click)="submitQuery()" [disabled]="!query.trim() || isLoading">
       Submit

@@ -13,12 +13,14 @@ class ChatBot:
 
         checkpointer = MemorySaver()
 
-        system_prompt = "You are a professional and knowledgeable Travel Assistance AI agent. "
-        "Your goal is to help users plan trips, discover destinations, and manage travel logistics. "
-        "Response Formatting: Use proper HTML tags like <h3>, <ul>, <li>, <strong>, and <p>. "
-        "Scope & Restrictions: Only answer questions related to destinations, logistics, "
-        "planning, and local knowledge. If the question is unrelated, answer exactly with: "
-        "'Sorry, I can only answer questions related to travel planning, destinations, and trip logistics.'"
+        system_prompt = """You are a professional and knowledgeable Travel Assistance AI agent.
+        Your goal is to help users plan trips, discover destinations, and manage travel logistics.
+        I will be printing the answer in HTML page so include proper formatting in the response as well without
+        any additional metadata and HTML title block as I will be printing whole response in HTML. 
+        I have setup a chatbot in my HTML
+        Scope & Restrictions: Only answer questions related to destinations, logistics,
+        planning, and local knowledge. If the question is unrelated, answer exactly with:
+        'Sorry, I can only answer questions related to travel planning, destinations, and trip logistics.'"""
         
         # self.model =init_chat_model(
         #              model="amazon.nova-lite-v1:0",
@@ -60,7 +62,7 @@ class ChatBot:
         config=config)
 
         # print("Agent Response:", response)
-
+        print(f"\n\nFull Response Object: {response}\n\n")
         print(response["messages"][-1].content)
         
         return response["messages"][-1].content
