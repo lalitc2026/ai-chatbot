@@ -1,14 +1,18 @@
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 
-async def flight_search() -> any: 
-    client = MultiServerMCPClient(
-        {
-            "travel_server": {
-                "transport": "streamable_http",
-                "url": "https://mcp.kiwi.com"
+class TravelMCP:
+
+    def __init__(self):
+        self._client = MultiServerMCPClient(
+            {
+                "travel_server": {
+                    "url": "https://mcp.kiwi.com",
+                    "transport": "streamable_http",
+                }
             }
-        }
-    )
-    
-    tools = await client.get_tools()
+        )
+
+    async def get_tools(self):
+        tools = await self._client.get_tools()
+        return tools

@@ -9,8 +9,9 @@ from langchain.tools import tool
 from typing import Any
 from web_search import web_search
 from langchain.agents.middleware import SummarizationMiddleware, wrap_model_call
-from flight_search import flight_search
 from dynamic_model_middleware import DynamicModelMiddleware
+from flight_search import TravelMCP
+import asyncio
 
 class ChatBot:
             
@@ -29,22 +30,31 @@ class ChatBot:
         'Sorry, I can only answer questions related to travel planning, destinations, and trip logistics.'"""
 
         aws_llm = ChatBedrock(model="apac.amazon.nova-lite-v1:0", region="ap-south-1")
+
+        # dynamic_model_middleware = DynamicModelMiddleware()
+        # dynamicModel = dynamic_model_middleware.state_based_model
+        dynamicModel = DynamicModelMiddleware.state_based_model
         
         # Define the middleware stack
         my_middleware = [
             SummarizationMiddleware(
                         model=ChatBedrock(model="apac.amazon.nova-micro-v1:0", region="ap-south-1"),
-                                    trigger=("tokens", 100),
+                                    trigger=("tokens", 10),
                                     keep=("messages", 5)
             ),
-            DynamicModelMiddleware().state_based_model,                 
+            dynamicModel            
         ]
-  
+    
+        travel_mcp = TravelMCP()
+        travel_mcp_tools = asyncio.run(travel_mcp.get_tools())
+
+        tools = [web_search] + travel_mcp_tools
+
         self.agent = create_agent(
             aws_llm, 
             system_prompt=system_prompt, 
             checkpointer=checkpointer, 
-            tools=[web_search, flight_search],
+            tools=tools,
             middleware=my_middleware
             )
         
