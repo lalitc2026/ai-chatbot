@@ -16,7 +16,7 @@ class DynamicModelMiddleware:
         # request.messages is a shortcut for request.state["messages"]
         message_count = len(request.messages)  
         print(f"message count = {message_count}")
-        if message_count > 3:
+        if message_count > 5:
             # Long conversation - use model with larger context window
             model = DynamicModelMiddleware.aws_llm_large_model
             print(f"large model")
